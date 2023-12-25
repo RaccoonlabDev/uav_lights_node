@@ -5,7 +5,9 @@ set(applicationSourceCode
 
     Src/cyphal_application/lights/lights.cpp
     Src/cyphal_application/application.cpp
+
     Libs/Cyphal/Udral/rgbled.cpp
+    Libs/Cyphal/Udral/circuit_status.cpp
 )
 set(applicationHeaders
     Src

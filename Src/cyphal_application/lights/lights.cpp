@@ -45,14 +45,21 @@ void RgbLights::update() {
     }
     next_time_ms = HAL_GetTick() + 10;
 
+    // Temperature
+    static const uint16_t TEMP_REF = 25;
+    static const uint16_t ADC_REF = 1750;   ///< v_ref / 3.3 * 4095
+    static const uint16_t AVG_SLOPE = 5;    ///< avg_slope/(3.3/4096)
+    _temp_pub.setPortId(paramsGetIntegerValue(PARAM_CRCT_TEMPERATURE_ID));
+    if (_temp_pub.isEnabled()) {
+        uint16_t adc_measurement = AdcPeriphery::get(AdcChannel::ADC_TEMPERATURE);
+        uavcan_si_sample_temperature_Scalar_1_0 msg;
+        msg.kelvin = (ADC_REF - adc_measurement) / AVG_SLOPE + TEMP_REF + 273;
+        _temp_pub.publish(msg);
+    }
+
+    // Lights
     auto color = _rgbled_sub.get();
     static Leds_Color_t leds;
-
-    // static uint8_t counter = 0;
-    // leds.colors[counter].shades.red = color.red * RED_SCALE;
-    // leds.colors[counter].shades.green = color.green * GREEN_SCALE;
-    // leds.colors[counter].shades.blue = color.blue * BLUE_SCALE;
-    // counter = (counter + 1) % 32;
 
     for (uint_fast8_t led_idx = 0; led_idx < 32; led_idx++) {
         leds.colors[led_idx].shades.red = color.red * RED_SCALE;

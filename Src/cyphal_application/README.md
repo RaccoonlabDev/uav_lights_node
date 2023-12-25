@@ -3,6 +3,7 @@ The node has the following interface:
 | №  | Type | Message | Topic name  |
 | -- | ---- | ------- | ----------- |
 |   1 | sub | reg.udral.physics.optics.HighColor.0.1 | lights | {'type': 'Port', 'data_type': 'reg.udral.physics.optics.HighColor.0.1', 'enum_base': 'RGBLED'}|
+|   2 | pub | uavcan.si.sample.temperature.Scalar.1.0 | crct.temp | {'type': 'Port', 'data_type': 'uavcan.si.sample.temperature.Scalar.1.0', 'enum_base': 'PARAM_CRCT_TEMPERATURE'}|
 
 The node has the following registers:
 

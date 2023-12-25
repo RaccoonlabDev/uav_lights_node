@@ -7,3 +7,8 @@ uavcan.sub.lights:
   type: Port
   data_type: reg.udral.physics.optics.HighColor.0.1
   enum_base: RGBLED
+
+uavcan.pub.crct.temp:
+  type: Port
+  data_type: uavcan.si.sample.temperature.Scalar.1.0
+  enum_base: PARAM_CRCT_TEMPERATURE
