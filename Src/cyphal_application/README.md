@@ -2,8 +2,7 @@ The node has the following interface:
 
 | №  | Type | Message | Topic name  |
 | -- | ---- | ------- | ----------- |
-|   1 | sub | reg.udral.service.actuator.common.sp.Vector31 | setpoint | {'type': 'Port', 'data_type': 'reg.udral.service.actuator.common.sp.Vector31', 'enum_base': 'PARAM_SUB_SETPOINT'}|
-|   2 | pub | reg.udral.service.actuator.common.Feedback.0.1 | feedback | {'type': 'Port', 'data_type': 'reg.udral.service.actuator.common.Feedback.0.1', 'enum_base': 'PARAM_PUB_FEEDBACK_1'}|
+|   1 | sub | reg.udral.physics.optics.HighColor.0.1 | lights | {'type': 'Port', 'data_type': 'reg.udral.physics.optics.HighColor.0.1', 'enum_base': 'RGBLED'}|
 
 The node has the following registers:
 

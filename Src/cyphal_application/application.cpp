@@ -8,16 +8,16 @@
 #include "main.h"
 #include "string_params.hpp"
 #include "params.hpp"
-#include "setpoint/setpoint.hpp"
-#include "feedback/feedback.hpp"
+#include "lights/lights.hpp"
 #include "periphery/led/led.hpp"
+
 
 void init_persistent_storage() {
     paramsInit(static_cast<uint8_t>(IntParamsIndexes::INTEGER_PARAMS_AMOUNT), NUM_OF_STR_PARAMS);
     paramsLoadFromFlash();
 
     auto node_name_param_idx = static_cast<ParamIndex_t>(IntParamsIndexes::INTEGER_PARAMS_AMOUNT);
-    paramsSetStringValue(node_name_param_idx, 19, (const uint8_t*)"co.raccoonlab.mini");
+    paramsSetStringValue(node_name_param_idx, 21, (const uint8_t*)"co.raccoonlab.lights");
 }
 
 void application_entry_point() {
@@ -28,19 +28,13 @@ void application_entry_point() {
     cyphal::Cyphal cyphal;
     int init_res = cyphal.init();
 
-    SetpointSubscriber setpoint(&cyphal);
-    init_res |= setpoint.init();
-
-    FeedbackPublisher feedback(&cyphal);
-    init_res |= feedback.init();
+    RgbLights lights(&cyphal);
+    init_res |= lights.init();
 
     while (true) {
-        auto led_color = (init_res >= 0) ? LedColor::BLUE_COLOR : LedColor::RED_COLOR;
-        LedPeriphery::toggle(led_color);
+        LedPeriphery::toggle();
 
         cyphal.process();
-
-        auto crnt_time_ms = HAL_GetTick();
-        feedback.process(crnt_time_ms);
+        lights.update();
     }
 }
