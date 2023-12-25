@@ -126,6 +126,15 @@ add_custom_command(TARGET ${EXECUTABLE}
     COMMAND arm-none-eabi-size ${EXECUTABLE}
 )
 
+execute_process(
+  COMMAND git rev-parse --short=16 HEAD
+  COMMAND_ERROR_IS_FATAL ANY
+  OUTPUT_VARIABLE GIT_HASH_SHORT
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+set(GIT_HASH "0x${GIT_HASH_SHORT}")
+add_definitions(-DGIT_HASH=${GIT_HASH})
+
 add_custom_command(TARGET ${EXECUTABLE}
     POST_BUILD
     COMMAND arm-none-eabi-objcopy -O ihex ${EXECUTABLE} ${PROJECT_NAME}.hex
