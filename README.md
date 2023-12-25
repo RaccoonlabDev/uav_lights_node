@@ -10,6 +10,8 @@ The default capabilities of the node are shown on the picture below:
 
 <img src="assets/yukon.png" alt="drawing">
 
+<img src="assets/yakut.png" alt="drawing">
+
 ## 1. Brief hardware description
 
 The node has 6 user pins. By default 4 of them are configured as PWM and 2 of them as UART RX, but you can change the configuration to support I2C, ADC, GPIO or something else.
