@@ -26,17 +26,24 @@ int8_t RgbLights::init() {
         return res;
     }
 
-    res = AdcPeriphery::init();
-    if (res < 0) {
-        return res;
-    }
-
     return 0;
 };
 
 void RgbLights::update() {
     _process_crct_remperature();
-    _process_lights();
+
+    if (HAL_GetTick() >= _next_light_process_time_ms) {
+        _next_light_process_time_ms = HAL_GetTick() + 40;
+
+        if (_init_counter < WS2812_LEDS_AMOUNT) {
+            _init_lights();
+        } else {
+            _process_last_received_command();
+        }
+
+        ws2812bSetColors(&_leds);
+        ws2812bStartOnce();
+    }
 }
 
 /**
@@ -63,20 +70,17 @@ void RgbLights::_process_crct_remperature() {
     }
 }
 
-/**
- * @note
- * 25 Hz blinking is considered to be enough.
- * Start decreasing the brighness when temperature is higher than 60 °C.
- * Do not allow to reach 80 °C.
- */
-void RgbLights::_process_lights() {
-    if (HAL_GetTick() < _next_light_process_time_ms) {
-        return;
+void RgbLights::_init_lights() {
+    if (_init_counter < WS2812_LEDS_AMOUNT) {
+        _leds.colors[_init_counter].shades.red = 5;
+        _leds.colors[_init_counter].shades.green = 5;
+        _leds.colors[_init_counter].shades.blue = 5;
     }
-    _next_light_process_time_ms = HAL_GetTick() + 20;
 
-    auto color = _rgbled_sub.get();
+    _init_counter++;
+}
 
+void RgbLights::_process_last_received_command() {
     float max_brightness;
     if (current_temperature <= CONTROL_MIN) {
         max_brightness = 1.0;
@@ -84,6 +88,15 @@ void RgbLights::_process_lights() {
         max_brightness = 0.0;
     } else {
         max_brightness = 1.0f - (current_temperature - CONTROL_MIN) / (CONTROL_MAX - CONTROL_MIN);
+    }
+
+    reg_udral_physics_optics_HighColor_0_1 color;
+    if (_rgbled_sub.get_last_recv_ts_ms() == 0) {
+        color.red = 1;
+        color.green = 2;
+        color.blue = 1;
+    } else {
+        color = _rgbled_sub.get();
     }
 
     uint8_t red = (float)color.red / reg_udral_physics_optics_HighColor_0_1_MAX_RED * 255.0f * max_brightness;
@@ -94,6 +107,4 @@ void RgbLights::_process_lights() {
         _leds.colors[led_idx].shades.green = green;
         _leds.colors[led_idx].shades.blue = blue;
     }
-    ws2812bSetColors(&_leds);
-    ws2812bStartOnce();
 }

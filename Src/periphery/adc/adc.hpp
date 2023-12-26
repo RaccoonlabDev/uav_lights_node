@@ -12,10 +12,11 @@ extern "C" {
 #endif
 
 enum class AdcChannel : uint8_t {
-    ADC_VIN,
-    ADC_5V,
-    ADC_TEMPERATURE,
-    ADC_NUMBER_OF_CNANNELS,
+    ADC_VIN                 = 0,
+    ADC_5V                  = 1,
+    ADC_VERSION             = 2,
+    ADC_TEMPERATURE         = 3,
+    ADC_NUMBER_OF_CNANNELS  = 4,
 };
 
 class AdcPeriphery {

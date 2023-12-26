@@ -10,6 +10,7 @@
 #include "params.hpp"
 #include "lights/lights.hpp"
 #include "periphery/led/led.hpp"
+#include "periphery/adc/adc.hpp"
 
 
 void init_persistent_storage() {
@@ -21,6 +22,7 @@ void init_persistent_storage() {
 }
 
 void application_entry_point() {
+    AdcPeriphery::init();
     LedPeriphery::reset();
     init_persistent_storage();
     cyphal::NodeGetInfoSubscriber::setHardwareVersion(2, 1);
